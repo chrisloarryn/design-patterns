@@ -1,4 +1,4 @@
-# strategy
+# decorator
 
-### If there is a lot of "if", "switch", etc statements
-### strategy pattern is a good choice
+### add extra functionality evolving another functionality
+### giving it more superpowers

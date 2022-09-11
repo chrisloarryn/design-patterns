@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node observer.ts",
-    "start:dev": "ts-node-dev observer.ts"
+    "start": "ts-node decorator.ts",
+    "start:dev": "ts-node-dev decorator.ts"
   },
   "keywords": [],
   "author": "",
