@@ -1,0 +1,38 @@
+/* language css */
+/* path decorator/js/styles.css */
+
+.box {
+  display: flex;
+  flex-flow: wrap;
+}
+
+.box > div {
+  border: 1px solid #000;
+  flex: 0 0 48%;
+}
+
+/* language css */
+
+/* form-group class */
+.form-group {
+  margin-bottom: 15px;
+  /* divide form by two */
+  width: 48%;
+  /* float left */
+  float: left;
+  /* margin right */
+  margin-right: 2%;
+}
+
+.form-control {
+  border: 0;
+  border-bottom: 1px solid #000;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+.form-control:focus {
+  border-bottom: 1px solid #000;
+  box-shadow: none;
+}
