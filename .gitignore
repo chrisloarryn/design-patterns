@@ -1,3 +1,13 @@
 
 */*/node_modules
-/idea
+/.idea
+*.iml
+*.ipr
+*.iws
+
+# OSX
+.DS_Store
+.AppleDouble
+.LSOverride
+**/.DS_Store
+.DS_Store
