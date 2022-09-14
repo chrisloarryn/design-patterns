@@ -1,99 +1,137 @@
-interface Component {
-  getDetail(): string;
+interface State {
+  next(ticket: Ticket): number | null;
+  add(ticket: Ticket, quantity: number): void;
 }
 
-// Component
-class ProductComponent implements Component {
-  protected name!: string;
+class Ticket {
+  private state: State;
+  quantity: number;
+  readonly limit: number;
+  private number: number;
 
-  constructor(name: string) {
-    this.name = name;
+  constructor(limit: number) {
+    this.limit = limit;
+    this.quantity = 0;
+    this.number = 0;
+    this.state = new EmptyState();
   }
 
-  public getDetail(): string {
-    return `${this.name}`;
+  get getNumber(): number {
+    return this.number++;
   }
-}
-
-// Decorator
-abstract class ProductDecorator implements Component {
-  protected component!: Component;
-
-  constructor(component: Component) {
-    this.component = component;
+  set setState(state: State) {
+    this.state = state;
   }
-
-  public getDetail(): string {
-    return this.component.getDetail();
+  get getState(): State {
+    return this.state;
   }
-}
-
-// Decorator 1
-class CommercialInfoProductDecorator extends ProductDecorator {
-  private tradename!: string;
-  private brand!: string;
-
-  constructor(component: Component, tradename: string, brand: string) {
-    super(component);
-
-    this.tradename = tradename;
-    this.brand = brand;
+  next(): number | null {
+    return this.state.next(this);
   }
-
-  public getDetail(): string {
-    return `${this.tradename} ${this.brand} ${super.getDetail()}`;
+  add(quantity: number): void {
+    this.state.add(this, quantity);
   }
 }
 
-// Decorator 2
-class StoreProductDecorator extends ProductDecorator {
-  private price!: number;
-
-  constructor(component: Component, price: number) {
-    super(component);
-
-    this.price = price;
+class EmptyState implements State {
+  next(): number | null {
+    return null;
   }
-
-  public getDetail(): string {
-    return `${super.getDetail()} $${this.price}`;
-  }
-}
-
-// decorator 3
-class HTMLProductDecorator extends ProductDecorator {
-  public getDetail(): string {
-    return `
-      <h1>Product Information</h1>
-      <p>
-        ${super.getDetail()}
-      </p>
-    `;
+  add(ticket: Ticket, quantity: number): void {
+    // validate limit
+    if (quantity < ticket.limit) {
+      ticket.quantity = quantity;
+      ticket.setState = new WithDataState();
+    } else if (quantity === ticket.limit) {
+      ticket.quantity = quantity;
+      ticket.setState = new FullState();
+    }
   }
 }
 
-// execute component
-const product = new ProductComponent('Doritos');
-console.log(product.getDetail());
+class WithDataState implements State {
+  next(ticket: Ticket): number | null {
+    ticket.quantity--;
+    if (ticket.quantity <= 0) {
+      ticket.setState = new EmptyState();
+    }
+    return ticket.getNumber;
+  }
+  add(ticket: Ticket, quantity: number): void {
+    // validate limit
+    if (ticket.quantity + quantity < ticket.limit) {
+      ticket.quantity += quantity;
+    } else if (ticket.quantity + quantity === ticket.limit) {
+      ticket.quantity += quantity;
+      ticket.setState = new FullState();
+    }
+  }
+}
 
-// decorate component with decorator 1
-const commercialInfoProduct = new CommercialInfoProductDecorator(
-  product,
-  'Evercrisp',
-  'Doritos'
-);
-console.log(commercialInfoProduct.getDetail());
+class FullState implements State {
+  next(ticket: Ticket): number | null {
+    ticket.quantity--;
+    if (ticket.quantity <= 0) {
+      ticket.setState = new EmptyState();
+    } else {
+      ticket.setState = new WithDataState();
+    }
+    return ticket.getNumber;
+  }
+  add(ticket: Ticket, quantity: number): void {
+    console.log('Ticket is full');
+  }
+}
 
-// decorate component with decorator 2
-const storeProduct = new StoreProductDecorator(product, 15.99);
-console.log(storeProduct.getDetail());
+// Language: typescript
+// Path: state/ts/index.ts
+const ticket = new Ticket(10);
+console.log('====================================');
+console.log(ticket.getState);
+console.log('====================================');
 
-// decorate component with decorator 2 and 1
-const storeProduct2 = new StoreProductDecorator(commercialInfoProduct, 45.99);
-console.log(storeProduct2.getDetail());
+console.log('====================================');
+console.log(ticket.next());
+console.log('====================================');
 
-// decorate component with decorator 3
-const htmlProduct = new HTMLProductDecorator(storeProduct2);
-console.log(htmlProduct.getDetail());
+console.log('====================================');
+ticket.add(11);
+console.log(ticket.getState);
+console.log('====================================');
 
-// Output:
+console.log('====================================');
+console.log(ticket.next());
+console.log('====================================');
+
+ticket.add(7); // is not full, so add 7 and change state to WithDataState
+
+console.log('====================================');
+console.log(ticket.getState);
+console.log('====================================');
+
+console.log('====================================');
+console.log(ticket.next());
+console.log('====================================');
+
+console.log('====================================');
+console.log(ticket.next());
+console.log('====================================');
+
+console.log('====================================');
+ticket.add(4); // will change state to FullState, because 7 + 4 = 11
+console.log(ticket.getState);
+console.log('====================================');
+
+console.log('====================================');
+console.log(ticket.add(1)); // will not change state, because 11 + 1 = 12
+console.log(ticket.getState);
+console.log('====================================');
+
+console.log('====================================');
+console.log(ticket.next());
+console.log(ticket.next());
+console.log(ticket.next());
+console.log(ticket.next());
+console.log(ticket.getState);
+console.log(ticket.next());
+console.log('====================================');
