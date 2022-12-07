@@ -207,11 +207,11 @@ class NormalPersonBuilder implements PersonBuilder {
   }
 }
 
-class PersonDirector implements PersonBuilder {
-  private personBuilder: PersonBuilder;
+class PersonDirector {
+  private personBuilder!: PersonBuilder;
 
   constructor(personBuilder: PersonBuilder) {
-    this.personBuilder = personBuilder;
+    this.setPersonBuilder(personBuilder);
   }
 
   setPersonBuilder = (personBuilder: PersonBuilder) => {
