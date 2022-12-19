@@ -1,5 +1,5 @@
 import './style.css';
-import './clean-code/06-classes-b';
+import './stupid/01-singleton';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
