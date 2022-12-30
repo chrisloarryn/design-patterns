@@ -1,4 +1,127 @@
-# design-pattern
+(()=>{
+    // Aplicando el principio de responsabilidad única
+    // Prioriza la composición frente a la herencia
+
+    type Gender = 'M'|'F';
+
+    interface PersonProps {
+			firstName: string;
+			lastName     : string;
+        gender   : Gender;
+        birthdate: Date;
+    }
+
+    class Person {
+			public firstName: string;
+			public lastName     : string;
+        public gender   : Gender;
+        public birthdate: Date;
+
+        constructor({ firstName, lastName, gender, birthdate }: PersonProps ){
+					this.firstName = firstName;
+					this.lastName = lastName;
+            this.gender = gender;
+            this.birthdate = birthdate;
+        }
+    }
+
+
+    interface UserProps {
+        email     : string;
+        role      : string;
+    }
+    class User {
+
+        public email       : string;
+        public role        : string;
+        private lastAccess : Date;
+
+        constructor({ email, role }: UserProps ){
+            this.lastAccess = new Date();
+            this.email = email;
+            this.role = role;
+        }
+
+        checkCredentials() {
+            return true;
+        }
+    }
+
+
+    interface SettingsProps {
+        lastFolderOpen  : string;
+        workingDirectory: string;
+    }
+
+    class Settings {
+        public workingDirectory: string; 
+        public lastFolderOpen  : string; 
+
+        constructor({ workingDirectory, lastFolderOpen }: SettingsProps ){
+            this.workingDirectory = workingDirectory;
+            this.lastFolderOpen = lastFolderOpen;
+        }
+    }
+    
+    
+    // Nuevo User Settings
+    interface UserSettingsProps {
+        birthdate       : Date;
+        email           : string;
+        gender          : Gender;
+        lastFolderOpen  : string;
+			firstName: string;
+			lastName            : string;
+        role            : string;
+        workingDirectory: string;
+    }
+
+    class UserSettings {
+        // constructor(
+        //     public person: Person,
+        //     public user  : User,
+        //     public settings: Settings,
+        // ){}
+        public person  : Person;
+        public user    : User; 
+        public settings: Settings;
+
+        constructor({ 
+					firstName,
+					lastName,
+					gender,
+					birthdate,
+            email, role,
+            workingDirectory, lastFolderOpen,
+        }: UserSettingsProps) {
+					this.person = new Person({ 
+						firstName,
+						lastName,
+						gender,
+						birthdate
+					});
+            this.user = new User({ email, role });
+            this.settings = new Settings({ workingDirectory, lastFolderOpen })
+        }
+    }
+    
+
+
+    const userSettings = new UserSettings({
+        birthdate: new Date('1985-10-21'),
+        email: 'fernando@google.com',
+        gender: 'M',
+        lastFolderOpen: '/home',
+			firstName: 'Fernando',
+			lastName: 'Perrera',
+        role: 'Admin',
+        workingDirectory: '/usr/home'
+    });
+
+    console.log({ userSettings, credentials: userSettings.user.checkCredentials() });
+    
+})()
+
 
 // singleton: is a design pattern that restricts the instantiation of a class to one object. This is useful when exactly one object is needed to coordinate actions across the system.
 //
@@ -38,23 +161,3 @@
 // Fakes: is an object that has working implementation, but usually takes some shortcut which makes it not suitable for production (an in memory database is a good example).
 // Dummy: is an object that is passed around but never actually used. Usually it is just used to fill parameter lists.
 
-
-// Inflate (big method): too many lines of code in a method. This can make it difficult to understand and maintain the code.
-
-// Inflate (large class): is a code smell that occurs when a class has too many responsibilities. This can make it difficult to understand and maintain the code.
-
-// Inflate (primitive obsession): is a code smell that occurs when you use primitive types instead of objects. This can make it difficult to understand and maintain the code. This is usually caused by the primitive obsession code smell.
-
-// Inflate (Long parameter list): is a code smell that occurs when a method has too many parameters. This can make it difficult to understand and maintain the code.
-
-// Couplers (feature envy): is a code smell that occurs when a method uses the data of another class more than its own data. This can make it difficult to understand and maintain the code.
-
-// Couplers (Inappropriate intimacy): is a code smell that occurs when two classes are too dependent on each other. This can make it difficult to understand and maintain the code.
-
-// Couplers (Message chains): is a code smell that occurs when you have a chain of method calls. This can make it difficult to understand and maintain the code. This is usually caused by the feature envy code smell.
-
-// Couplers (Middle man): is a code smell that occurs when a class does nothing but delegate to another class. This can make it difficult to understand and maintain the code.
-
-
-
-// Refactoring: is the process of changing a software system in such a way that it does not alter the external behavior of the code, while improving its internal structure. This is done by applying a series of small behavior-preserving transformations, each of which "too small to be worth doing". This can make the code easier to understand and maintain.

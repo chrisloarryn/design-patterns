@@ -1,5 +1,5 @@
 import './style.css';
-import './stupid/01-singleton';
+import './code-smells/02-low-coupling';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
