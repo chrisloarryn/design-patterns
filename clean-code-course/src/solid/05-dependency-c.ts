@@ -31,3 +31,12 @@ export class JsonDataBaseService implements PostProvider {
     return localPosts;
   }
 }
+
+export class WebApiPostService implements PostProvider {
+	async getPosts() {
+		const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+		const posts = await response.json();
+
+		return posts;
+	}
+}
