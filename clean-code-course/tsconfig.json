@@ -5,8 +5,15 @@
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
     "moduleResolution": "Node",
+    "allowJs": false,
     "strict": true,
     "sourceMap": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"]
+    },
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "noEmit": true,
